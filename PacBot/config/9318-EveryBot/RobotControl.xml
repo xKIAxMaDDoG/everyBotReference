@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot name = "Everybot2019">
+	<interface>
+		<device name = "pilot"     type = "joystick" num="0" />
+    </interface>
+
+  <control type="arcade_drive" name="drive">
+       <motor name="front_left"   	type="Victor" 	port="2" fuse="3" invert="false"     />
+       <motor name="back_left"  	type="Victor" 	port="3" fuse="2" invert="false"     /> 
+       <motor name="front_right"  	type="Victor"  	port="0" fuse="13" invert="true"      />
+       <motor name="back_right" 	type="Victor" 	port="1" fuse="12" invert="true"      />
+    
+       <oi name="forward"        	device="pilot" chan="1"  scale="-1.20"	    />
+       <oi name="turn"          	device="pilot" chan="2"  scale="-0.6"	    />
+    </control>
+
+<control type="motor" name="hatch" max_cmd_delta="0.25" period="0.1"
+      min_control="-1.0" max_control="1.0" >
+
+      <motor type="Victor" port="4" invert="false" />
+
+      <oi name="momentary_a"	device="pilot" chan="5" value="1.0" invert="false" /> <!-- hatch DOWN -->
+      <oi name="momentary_b"	device="pilot" chan="7" value="-1.0" invert="false" /> <!-- hatch DOWN -->
+</control>
+
+ <control type="motor" name="intake" max_cmd_delta="0.25" period="0.1"
+       min_control="-1.0" max_control="1.0" >
+ 
+       <motor type="Victor" port="5" invert="false" />
+       <oi name="momentary_a"	device="pilot" chan="6" value="0.90" invert="false"/>
+       <oi name="momentary_b"	device="pilot" chan="8" value="-0.90" invert="false"/>
+
+   </control>
+   
+   <control type="camera_server" name="camera">
+       <camera res_x="240" res_y="240" fps="30" id="0" />
+   </control>
+</robot>
+
+
+

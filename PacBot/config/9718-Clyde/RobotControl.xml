@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<robot name="Clyde">
+<<<<<<< HEAD
+    <interface>
+        <device name = "pilot"   type = "joystick" num="0" /> 
+    </interface>
+
+    
+    <control type = "motor"  period = "0.02">
+        <motor name = "falcon" type = "TalonFXCan" port="18" invert = "false"  />
+        <oi name="analog"   device="pilot"  chan="1"/>
+    </control>
+=======
+	<interface>
+		<device name = "pilot"   type = "joystick" num="0" /> 
+	</interface>
+
+	<d_oi name = "config_arm"  device = "pilot" chan = "11" invert = "false" />
+	<d_oi name = "config_load" device = "pilot" chan = "12" invert = "false" />
+	
+	<control type = "arcade_drive"  period = "0.02" priority = "0">
+		<motor name = "back_right"  type = "SparkMaxCan" port="3" invert = "false"  />
+		<motor name = "front_right" type = "SparkMaxCan" port="1" invert = "false" />
+		<motor name = "front_left"   type = "SparkMaxCan" port="2" invert = "true"  />
+		<motor name = "back_left"  type = "SparkMaxCan" port="4" invert = "true" />
+
+		<gyro port="0" sensitivity="0.007"/>
+		
+		<d_encoder name="left"  port_a="4" port_b="5" scale="0.090" invert="true" />
+		<d_encoder name="right" port_a="6" port_b="7" scale="0.090" invert="false" />
+ 
+ 		<oi name = "forward" device = "pilot" chan = "1" invert="false" value="0.9" deadband="0.05" />
+		<oi name = "turn"    device = "pilot" chan = "2" invert="false"  value="0.75" deadband="0.05" />
+	
+		<d_oi name = "test_fwd" device = "pilot" chan = "7" />
+		<d_oi name = "test_rev"	device = "pilot" chan = "8" />
+	</control>
+
+        <control type="motor" name="top_gear" max_cmd_delta="0.2" period="0.05">
+                <motor type="TalonSrxCan" port="7" invert="false" />
+                <oi name="momentary_a"   device="pilot" chan="2" value="-0.3" invert="false"/>
+                <oi name="momentary_b"   device="pilot" chan="4" value="0.3" invert="false"/>
+        </control>
+
+        <control type="motor" name="arm" max_cmd_delta="0.2" period="0.05">
+                <motor type="TalonSrxCan" port="62" invert="false" brake_mode="true" >
+                    <digital_input name="upper_limit" normally_open="false" reset_zero="false" />
+                    <o_digital_input name="lower_limit" normally_open="true" reset_zero="false" />
+                </motor>
+                <oi name="momentary_a"   device="pilot" chan="5" value="1.0" invert="false"/>
+                <oi name="momentary_b"   device="pilot" chan="7" value="-1.0" invert="false"/>
+        </control>
+
+        <control type="motor" name="intake" max_cmd_delta="0.2" period="0.05">
+                <motor type="TalonSrxCan" port="61" invert="false" />
+                <oi name="momentary_a"   device="pilot" chan="6" value="-0.1" invert="false"/>
+                <oi name="momentary_b"   device="pilot" chan="8" value="0.1" invert="false"/>
+        </control>
+
+	<control type="solenoid">
+		<solenoid module = "0" port = "1" />
+
+		<oi name = "on" device = "pilot" chan = "5"/>
+		<oi name = "off" device = "pilot" chan = "7"/>
+	</control>
+>>>>>>> origin/master
+</robot>

@@ -1,0 +1,11 @@
+#image: alexlin0/frc_build_test:2020.1.2
+#
+#variables:
+#  GIT_SUBMODULE_STRATEGY: recursive
+#
+#build_intake:
+#  script:
+#    - cd FlightUnit/Intake
+#    - ./gradlew installRoboRioToolchain
+#    - ./gradlew build
+

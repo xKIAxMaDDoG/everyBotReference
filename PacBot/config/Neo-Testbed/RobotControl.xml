@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name = "RobotControl">
+	<interface>
+		<device name = "pilot"   type = "joystick" num="0" />
+	</interface>
+	    
+   <control type="motor" name="NEO" max_cmd_delta="0.2" period="0.05">
+       <motor type="SparkMaxCan" port="5" invert="false" />
+       <oi name="momentary_a"	device="pilot" chan="6" value="-.5" invert="false"/>
+       <oi name="momentary_b"	device="pilot" chan="8" value=".5" invert="false"/>
+   </control>
+
+</robot>
+
+
+

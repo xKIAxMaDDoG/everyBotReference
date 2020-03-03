@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<macro name= "OpenLoop">
+	<connect type="head" step="forward"/>
+
+	<step name="forward" type="SetPower" ctrl_name= "pjs" power="1">
+		<connect type="next" step="wait_1"/>
+	</step>
+	
+	<step name="wait_1" type="MSWait" ctrl_name= "gen" time="2">
+		<connect type="next" step="backward"/>
+	</step>
+
+	<step  name="backward" type="SetPower" ctrl_name= "pjs" power="-0.3">
+		<connect type="next" step="wait_2"/>
+	</step>
+
+	<step name="wait_2" type="MSWait" ctrl_name= "gen" time="2">
+		<connect type="next" step="stop"/>
+	</step>
+
+	<step name="stop" type="SetPower" ctrl_name="pjs" power="0.0"> </step>
+
+</macro>

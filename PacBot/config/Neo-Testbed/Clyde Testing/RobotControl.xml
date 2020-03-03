@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+
+<robot name = "Reptar">
+    <interface>
+        <device name = "pilot"         type = "joystick"   num="0" />
+        <device name = "copilot"       type = "hid"   analogs="5"   digitals="32"  povs="1"   num="1" />
+        <device name = "copilot_gp"    type = "joystick"   num="2" />
+    </interface>
+
+    <!--========================================================
+    ===
+    === Drive
+    === 
+    =========================================================-->
+    <!--========================================================
+    === swu notes: yaw kp alone = 1.0; y kp alone = -0.15; together yaw = 1.0, y = -0.05
+    =========================================================-->
+    <control type="drive_system" name="drive" period = "0.02" motors_per_side="3" strafe_motor_count="1" current_limit="10" yaw_offset_kp="0.02" y_offset_kp="-0.125">
+        <d_vision />
+        <motor name ="right[0]" type="SparkMaxCan" port="2" invert="true"  control_period="10" brake_mode="true" >
+            <encoder invert="false"  scale="0.00064087" drive="true"/>
+            <pid  kf="0.05" kp="0.15" ki="0.0000" kd="1.5" />
+        </motor>
+        <motor name="right[1]"  type="SparkMaxCan" port="4" invert="true"  control_period="10"  brake_mode="false" />
+        <motor name="right[2]"  type="SparkMaxCan" port="6" invert="true"  control_period="10"  brake_mode="false" />
+
+        <motor name="left[0]"   type="SparkMaxCan" port="1" invert="false" control_period="10"  brake_mode="true" >
+            <encoder invert="false" scale="0.00064087" drive="true"/>
+            <pid  kf="0.05" kp="0.15" ki="0.0000" kd="1.5" />
+        </motor>
+        <motor name="left[1]"   type="SparkMaxCan" port="3" invert="false" control_period="10"  brake_mode="false" /> 
+        <motor name="left[2]"  type="SparkMaxCan" port="5" invert="false"  control_period="10"  brake_mode="false" />
+
+        <motor name="strafe[0]" type="TalonSrxCan" port="7" invert="true" control_period="10" brake_mode="false" />
+        <d_motor name="strafe[1]" type="VictorSpxCan" port="11" invert="true" control_period="10" brake_mode="false" />
+
+        <gyro port="CS0" sensitivity="0.007" type="SPI" /> <!-- type can be analog or SPI -->
+
+        <setpoints>
+            <setpoint type="rocket" name="LR1"   angle="-28.75"  index="0" />
+            <setpoint type="rocket" name="LR3"   angle="208.75"  index="1" />
+            <setpoint type="rocket" name="RR1"   angle="28.75"   index="2" />
+            <setpoint type="rocket" name="RR3"   angle="-208.75" index="3" />
+            <setpoint type="ship"   name="CF"    angle="0.0"     index="4" />
+            <setpoint type="ship"   name="LR2"   angle="-90.0"   index="5" />
+            <setpoint type="ship"   name="RR2"   angle="90.0"    index="6" />
+            <setpoint type="ship"   name="LS"    angle="180.0"   index="7" />
+        </setpoints>
+
+        <oi name="forward"         device="pilot" chan="1" scale="-1.0" deadband="0.05" />
+        <oi name="turn"            device="pilot" chan="2" scale="-0.5" deadband="0.05" />
+        <oi name="strafe"          device="pilot" chan="0" scale="-1.0" deadband="0.10" />
+        <oi name="gyro_recal_arm"  device="pilot" chan="9" />
+        <oi name="gyro_recal_exec" device="pilot" chan="10" />
+        <oi name="hybrid_mode"     device="pilot" chan="7" />
+        <oi name="hybrid_mode"     device="pilot" chan="5" />
+        <oi name="rocket_angle"    device="pilot" chan="7" />
+        <oi name="ship_angle"      device="pilot" chan="5" />
+        <_oi name="coast"          device="pilot" chan="5" />
+        <oi name="macro_next"      device="pilot" chan="2" />
+	<oi name="macro_abort"     device="pilot" chan="3" />
+        <oi name="fine_control"    device="pilot" chan="12" fine_control="0.4"/>
+        <_oi name="camera_calibrate" device="pilot" chan="9" />
+    </control>
+
+    <d_control type="drive_system" name="drive" period = "0.02" motors_per_side="3" strafe_motor_count="1" current_limit="10" yaw_offset_kp="0.02" y_offset_kp="-0.125">
+        <d_vision />
+        <motor name ="right[0]" type="TalonSrxCan" port="2" invert="true"  control_period="10" brake_mode="true" >
+            <encoder invert="false"  scale="0.00064087" drive="true"/>
+            <pid  kf="0.05" kp="0.15" ki="0.0000" kd="1.5" />
+        </motor>
+        <motor name="right[1]"  type="VictorSpxCan" port="4" invert="true"  control_period="10"  brake_mode="false" />
+        <motor name="right[2]"  type="VictorSpxCan" port="6" invert="true"  control_period="10"  brake_mode="false" />
+
+        <motor name="left[0]"   type="TalonSrxCan" port="1" invert="false" control_period="10"  brake_mode="true" >
+            <encoder invert="false" scale="0.00064087" drive="true"/>
+            <pid  kf="0.05" kp="0.15" ki="0.0000" kd="1.5" />
+        </motor>
+        <motor name="left[1]"   type="VictorSpxCan" port="3" invert="false" control_period="10"  brake_mode="false" /> 
+        <motor name="left[2]"  type="VictorSpxCan" port="5" invert="false"  control_period="10"  brake_mode="false" />
+
+        <motor name="strafe[0]" type="TalonSrxCan" port="7" invert="true" control_period="10" brake_mode="false" />
+        <d_motor name="strafe[1]" type="VictorSpxCan" port="11" invert="true" control_period="10" brake_mode="false" />
+
+        <gyro port="CS0" sensitivity="0.007" type="SPI" /> <!-- type can be analog or SPI -->
+
+        <setpoints>
+            <setpoint type="rocket" name="LR1"   angle="-28.75"  index="0" />
+            <setpoint type="rocket" name="LR3"   angle="208.75"  index="1" />
+            <setpoint type="rocket" name="RR1"   angle="28.75"   index="2" />
+            <setpoint type="rocket" name="RR3"   angle="-208.75" index="3" />
+            <setpoint type="ship"   name="CF"    angle="0.0"     index="4" />
+            <setpoint type="ship"   name="LR2"   angle="-90.0"   index="5" />
+            <setpoint type="ship"   name="RR2"   angle="90.0"    index="6" />
+            <setpoint type="ship"   name="LS"    angle="180.0"   index="7" />
+        </setpoints>
+
+        <oi name="forward"         device="pilot" chan="1" scale="-1.0" deadband="0.05" />
+        <oi name="turn"            device="pilot" chan="2" scale="-0.5" deadband="0.05" />
+        <oi name="strafe"          device="pilot" chan="0" scale="-1.0" deadband="0.10" />
+        <oi name="gyro_recal_arm"  device="pilot" chan="9" />
+        <oi name="gyro_recal_exec" device="pilot" chan="10" />
+        <oi name="hybrid_mode"     device="pilot" chan="7" />
+        <oi name="hybrid_mode"     device="pilot" chan="5" />
+        <oi name="rocket_angle"    device="pilot" chan="7" />
+        <oi name="ship_angle"      device="pilot" chan="5" />
+        <_oi name="coast"          device="pilot" chan="5" />
+        <oi name="macro_next"      device="pilot" chan="2" />
+	<oi name="macro_abort"     device="pilot" chan="3" />
+        <oi name="fine_control"    device="pilot" chan="12" fine_control="0.4"/>
+        <_oi name="camera_calibrate" device="pilot" chan="9" />
+    </d_control>
+
+    <!--========================================================
+    ===
+    === Intake
+    === 
+    =========================================================-->
+    <control type = "intake_control" name="intake" period = "0.05" priority = "0" 
+	roller_start_duration = "0.1" roller_stop_duration = "1.5">
+
+	<motor name = "intake_motor"    type = "TalonSrxCan" port="10" invert = "false"
+            brake_mode="true" max_current="50" max_current_count="2"  />
+
+        <solenoid name="supply" 	module="0" port="0"  invert="false" />
+        <solenoid name="hatcher"        module="0" port="4"  invert="false" />
+        <solenoid name="brake"	        module="0" port="5"  invert="false" />
+        <solenoid name="beak_punch" 	module="0" port="6"  invert="true" />
+        <solenoid name="beak" 	        module="0" port="7"  invert="false" />
+	<solenoid name="hatch_pusher"	module="0" port="1"  invert="false" duration="0.1" />
+
+        <d_digital_input name="hatcher_limit"        port="2" normally_open="false"/>
+        <digital_input name="hatch_detected_limit" port="0" normally_open="false"/>
+
+        <oi name="in" 	        device="copilot" chan="9"  intake_in_speed="-1.0" />
+        <oi name="out"          device="copilot" chan="10" intake_out_speed="1.0" hatch_out_speed="-1.0" />
+        <oi name="hatcher_up"   device="copilot" chan="3"  invert="false" />
+        <oi name="hatcher_down" device="copilot" chan="4"  invert="false" />
+        <oi name="beak_out"     device="copilot" chan="5"  invert="false"/>
+        <oi name="beak_in"      device="copilot" chan="6"  invert="false"/>
+        <oi name="beak_open"    device="copilot" chan="7"  invert="false"/>
+        <oi name="beak_close"   device="copilot" chan="8"  invert="false"/>
+        <oi name="supply_state" device="copilot" chan="0"  invert="true"/>
+        <d_oi name="beak_sensor_enable" device="copilot" chan="23"  invert="false"/>
+	<oi name="hatch_pusher_push_int" device="pilot" chan="0"/> 
+	<oi name="hatch_pusher_enable_state" device="copilot" chan="23"/>
+
+        <_oi name="beak_open"   device="pilot" chan="5" invert="false"/>
+        <_oi name="beak_close"  device="pilot" chan="7" invert="false"/>
+
+        <oi name="in_magic"     device="pilot" chan="6"  intake_in_speed="-1.0" />
+
+        <oi name="out_magic"    device="pilot" chan="8" intake_out_speed="1.0" />
+
+        <doi name="beak_in"          device="copilot_gp" chan="5"  invert="false"/>
+        <doi name="beak_out"         device="copilot_gp" chan="7"  invert="false"/>
+        <oi name="beak_punch_toggle" device="copilot_gp" chan="8"  invert="false"/>
+   </control>
+
+    <!--========================================================
+    ===
+    === Lift
+    === 
+    =========================================================-->
+    <control type="lift" name="lift" period="0.02" closed_loop="false"
+        max_velocity="200.0" desired_acceleration="150.0" desired_deceleration="150.0" 
+        initial_position="16.5" nudge_distance="0.1" >
+
+        <setpoints>
+            <setpoint name="hatch_floor"   lift="-1.0" index="0" />
+            <setpoint name="hatch_wall"    lift="6.0"  index="1" />
+            <setpoint name="hatch_low"     lift="10.0" index="2" />
+            <setpoint name="hatch_mid"     lift="38.0" index="3" />
+            <setpoint name="hatch_high"    lift="66.0" index="4" />
+            <setpoint name="stow_engage"   lift="9.0"  index="5" />
+            <setpoint name="stow_position" lift="17.0" index="6" />
+            <setpoint name="climb_prep"    lift="19.5" index="7" />
+
+            <setpoint name="cargo_floor"   lift="0.1"  index="8" />
+            <setpoint name="cargo_depot"   lift="1.5"  index="9" />
+            <setpoint name="cargo_low"     lift="19.0" index="10" />
+            <setpoint name="cargo_mid"     lift="45.0" index="11" />
+            <setpoint name="cargo_high"    lift="70.5" index="12" />
+            <setpoint name="cargo_ship"    lift="31.4" index="13" />
+            <setpoint name="cargo_human"   lift="36.0" index="14" />
+            <setpoint name="climb_target"  lift="-5.0" index="15" />
+        </setpoints>
+
+        <motor type="TalonSrxCan" port="9" invert="false" brake_mode="true"
+            current_limit="28" peak_current="30" peak_current_dur="50" >
+            <encoder invert="false" scale="0.00045"/>
+            <pid  kf="0.0" kp="0.12" ki="0.0000" kd="0.0" />
+            <digital_input name="upper_limit" normally_open="true" reset_zero="false" />
+            <digital_input name="lower_limit" normally_open="true" reset_zero="true" />
+        </motor>
+
+        <solenoid name="stow"       module="0" port="2" />
+        <solenoid name="gear_shift" module="0" port="3" />
+		
+        <oi name="setpoint0"       device="copilot_gp"  chan="3"  />
+        <oi name="setpoint1"       device="copilot_gp"  chan="10"  />
+        <oi name="setpoint2"       device="copilot_gp"  chan="2"  />
+        <oi name="setpoint3"       device="copilot_gp"  chan="1"  />
+        <oi name="setpoint4"       device="copilot_gp"  chan="4" />
+        <oi name="setpoint13"      device="copilot_gp"  chan="5" />
+        <oi name="ball_index_mode" device="copilot_gp"  chan="6"  />
+
+        <oi name="analog_setpoint_idx"  device="copilot"  chan="2" scale="1.0" deadband="0.00" />
+
+        <oi name="analog"  device="copilot_gp"  chan="3" scale="-0.3" />
+
+        <d_oi name="out"      device="pilot"    chan="1" invert="false"/>
+        <d_oi name="in"       device="pilot"    chan="2" invert="false"/>
+        <d_oi name="high"     device="pilot"    chan="3" invert="false"/>
+        <d_oi name="low"      device="pilot"    chan="4" invert="false"/>
+
+        <oi name="in"         device="copilot"  chan="25" invert="false"/>
+        <oi name="out"        device="copilot"  chan="24" invert="false"/>
+        <oi name="low"        device="copilot"  chan="13" invert="false"/>
+        <oi name="high"       device="copilot"  chan="14" invert="false"/>
+        <oi name="nudge_up"   device="copilot"  chan="15" invert="false"/>
+        <oi name="nudge_down" device="copilot"  chan="16" invert="false"/>
+
+        <oi name="closed_loop_state"    device="copilot"   chan="2" invert="true" />
+
+        <oi name="nudge_up"   device="pilot"  chan="4" invert="false"/>
+        <oi name="nudge_down" device="pilot"  chan="2" invert="false"/>
+    </control>
+
+    <!--========================================================
+    ===
+    === Climb
+    === 
+    =========================================================-->
+    <control name="climb" type="climb" period = "0.05"  priority="0" closed_loop="false" desired_deceleration="300" 
+        nudge_distance="0.2" desired_acceleration="300" max_velocity="50" initial_position="0.0">
+
+        <motor name="stinger" type="TalonSrxCan" port="8" invert="false" brake_mode="true">
+            <encoder invert="true" scale="0.000815"/>
+            <pid  kf="0.0" kp="0.3" ki="0.0000" kd="0.0" />
+            <digital_input name="upper_limit" normally_open="true"  reset_zero="true" />
+            <d_digital_input name="lower_limit" normally_open="true" reset_zero="false" />
+        </motor>
+	
+        <oi name="stinger_up"   device="copilot" chan="18" power="0.2" position="-0.05"/> 
+        <oi name="stinger_down" device="copilot" chan="17" power="-0.2" position="-24.0"/>
+		<oi name="stinger_lvl2"	device="copilot" chan="21" power="-0.2" position="-9"/>
+        <oi name="nudge_up"     device="copilot" chan="19" invert="false"/> 
+        <oi name="nudge_down"   device="copilot" chan="20" invert="false"/>   
+
+        <oi name="closed_loop_state" device="copilot" chan="1" invert="true"/>
+    </control>
+
+    <!--========================================================
+    ===
+    === Camera
+    === 
+    =========================================================-->
+    <d_control type="camera_server" name="cameras">
+        <camera id="1" res_x="320" res_y="240" fps="10"/>
+    </d_control>
+
+    <d_control type="simple_camera_server" name="cameras">
+        <camera id="1" res_width="320" res_height="240" fps="10"/>
+    </d_control>
+
+    <!--========================================================
+    ===
+    === Autons S2S
+    ===
+    =========================================================-->
+    <auton name="00 Nothing" file="/robot/config/macros/DoNothing.xml" />
+    <auton name="01 L Rocket 3 Low and Mid" file="/robot/config/macros/L1_LR3_LR3.xml" />	
+    <auton name="02 R Rocket 3 Low and Mid" file="/robot/config/macros/L1_RR3_RR3.xml" />
+    <auton name="03 L Rocket 3 Low" file="/robot/config/macros/L1_LR3_LS.xml" />
+    <auton name="04 R Rocket 3 Low" file="/robot/config/macros/L1_RR3_LS.xml" />
+    <auton name="05 L Cargo Bay Front" file="/robot/config/macros/L1_LCF_LS.xml" />
+    <auton name="07 R Cargo Bay Front" file="/robot/config/macros/L1_RCF_LS.xml" />
+    <auton name="08 L Cargo Bay Front and L Rocket Back" file="/robot/config/macros/L1_LCF_LR3.xml" />	
+    <auton name="09 R Cargo Bay Front and R Rocket Back" file="/robot/config/macros/L1_RCF_RR3.xml" />	
+    <auton name="10 Lvl 2 L Cargo Bay Front" file="/robot/config/macros/L2_LCF_LS.xml" />
+    <auton name="11 Lvl 2 R Cargo Bay Front" file="/robot/config/macros/L2_RCF_LS.xml" />
+    <auton name="12 Lvl 2 L Cargo Bay Front and L Rocket Back" file="/robot/config/macros/L2_LCF_LR3.xml" />	
+    <auton name="13 Lvl 2 R Cargo Bay Front and R Rocket Back" file="/robot/config/macros/L2_RCF_RR3.xml" />
+    <auton name="14 Lvl 2 L Rocket 3 Low" file="/robot/config/macros/L2_LR3_LS.xml" />
+    <auton name="15 Lvl 2 R Rocket 3 Low" file="/robot/config/macros/L2_RR3_LS.xml" />	
+    <auton name="16 L Rocket 1" file="/robot/config/macros/LR1.xml" />	
+    <auton name="17 R Rocket 1" file="/robot/config/macros/RR1.xml" />	
+    <auton name="18 L Cargo 1" file="/robot/config/macros/LC1.xml" />	
+    <auton name="19 R Cargo 1" file="/robot/config/macros/RC1.xml" />	
+    <auton name="77 Unstow" file="/robot/config/macros/Unstow.xml" />	
+    <auton name="99 Drive" file="/robot/config/macros/Drive.xml" />	
+    <auton name="88 MSTest" file="/robot/config/macros/MacroStepTest.xml" />
+
+    <!--========================================================
+    ===
+    === macros
+    ===
+    =========================================================-->
+    <macro name="HatchGrabWall" file="/robot/config/macros/HatchGrabWall.xml"/>
+    <macro name="HatchRelease" file="/robot/config/macros/HatchRelease.xml"/>
+    <macro name="Unstow" file="/robot/config/macros/Unstow.xml"/>
+	<macro name="Unstow_Lv2" file="/robot/config/macros/Unstow_Lv2.xml"/>
+    <macro name="SplitRotate" file="/robot/config/macros/SplitRotate.xml"/>
+    <macro name="Climb" file="/robot/config/macros/Climb.xml">
+        <oi name="start"            device="copilot"      chan="30"/>
+        <!-- Chan 31 used by this macro -->
+    </macro>
+
+    <macro name="StowIntake" file="/robot/config/macros/StowIntake.xml">
+        <oi name="start"            device="copilot"      chan="22"/>
+    </macro>
+
+    <macro name="FloorPickup" file="/robot/config/macros/FloorPickup.xml">
+        <oi name="start"            device="copilot"      chan="29"/>
+        <oi name="start"            device="copilot_gp"   chan="7"/>
+    </macro>
+
+    <macro name="Level2Climb" file="/robot/config/macros/Level2Climb.xml">
+        <oi name="start"            device="copilot"      chan="27"/>
+    </macro>
+
+    <macro name="Unstow" file="/robot/config/macros/Unstow.xml">
+        <oi name="start"            device="copilot"      chan="26"/>
+    </macro>
+	
+</robot>
